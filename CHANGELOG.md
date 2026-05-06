@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/deltartificial/vesta/compare/v1.2.0...v1.3.0) (2026-05-06)
+
+
+### Features
+
+* **examples:** demo each src/ folder with a wired-up status and counter ([#17](https://github.com/deltartificial/vesta/issues/17)) ([4d62b52](https://github.com/deltartificial/vesta/commit/4d62b525be543d2f6d844e9684092a0e4eb455a8))
+
 ## [1.2.0](https://github.com/deltartificial/vesta/compare/v1.1.0...v1.2.0) (2026-05-06)
 
 
