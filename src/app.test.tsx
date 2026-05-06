@@ -5,6 +5,6 @@ import App from "@/app";
 describe("App", () => {
   it("lazy-loads the home route and renders the title", async () => {
     render(<App />);
-    expect(await screen.findByRole("heading", { name: "Vesta" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "vesta" })).toBeInTheDocument();
   });
 });
