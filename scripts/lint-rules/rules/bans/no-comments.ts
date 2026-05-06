@@ -5,7 +5,9 @@ function isAllowedLineComment(trimmed: string): boolean {
   return (
     trimmed.startsWith("// @ts-") ||
     trimmed.startsWith("// biome-ignore") ||
-    trimmed.startsWith("// eslint-")
+    trimmed.startsWith("// eslint-") ||
+    trimmed.startsWith("// vesta-disable") ||
+    trimmed.startsWith("// vesta-enable")
   );
 }
 

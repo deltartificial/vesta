@@ -1,0 +1,5 @@
+{
+  "$schema": "./scripts/lint-rules/config.schema.json",
+  "rules": {},
+  "overrides": []
+}

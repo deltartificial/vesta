@@ -196,6 +196,95 @@ These run via `bun run check:ci`, not the custom linter:
 | `noDelete` | error |
 | `useImportType` | error — type-only imports must use `import type` |
 
+## Configuring rules
+
+Every rule is `error` by default. Three mechanisms to change that, applied in
+order — the last one wins:
+
+### 1. Repo-root config — `lint-rules.config.json`
+
+```json
+{
+  "$schema": "./scripts/lint-rules/config.schema.json",
+  "rules": {
+    "no-comments": "off",
+    "max-useState": { "options": { "max": 10 } },
+    "perf/tosorted-immutable": "warn",
+    "max-component-size": { "severity": "error", "options": { "maxLines": 600 } }
+  },
+  "overrides": [
+    {
+      "includes": ["src/legacy/**"],
+      "rules": { "no-as-casts": "off" }
+    },
+    {
+      "includes": ["src/components/big-page/**"],
+      "rules": { "max-component-size": "off" }
+    }
+  ]
+}
+```
+
+Each rule entry is either a severity string (`"off" | "warn" | "error"`) or
+an object `{ severity?, options? }`. Includes are globs relative to repo
+root: `**` matches any depth, `*` matches one path segment.
+
+### 2. File-level — top-of-file directive
+
+```ts
+// vesta-disable-file max-component-size, max-imports -- being refactored, see #234
+```
+
+Disables the listed rules for the entire file. The reason after `--` is
+mandatory — without it, the linter emits `[lint-rules-meta]
+vesta-disable-file requires a reason after \`--\``.
+
+### 3. Inline — line-level directive
+
+```ts
+// vesta-disable-next-line no-as-casts -- LegacyConfig has no zod schema
+const config = data as LegacyConfig;
+```
+
+Suppresses the listed rules on the next non-comment line only.
+
+For a block:
+
+```ts
+// vesta-disable no-json-parse, no-untyped-fetch -- raw IPC bridge
+function rawHandshake() {
+  const data = JSON.parse(...);
+  const r = await fetch(...);
+}
+// vesta-enable no-json-parse, no-untyped-fetch
+```
+
+`vesta-enable` without a rule list closes every open block in the file.
+
+### Tunable options per rule
+
+| Rule | Option | Default |
+|------|--------|---------|
+| `max-component-size` | `maxLines` | 450 |
+| `max-store-size` | `maxLines` | 250 |
+| `max-imports` | `max` | 25 |
+| `max-useState` | `max` | 3 |
+
+### Resolution order
+
+```
+1. Default                                 (severity: "error", default options)
+2. config.rules[ruleName]                  (global override)
+3. config.overrides[*].rules[ruleName]     (file matches an includes pattern)
+4. // vesta-disable-file <ruleName>        (top-of-file)
+5. // vesta-disable / vesta-enable         (open block at this line)
+6. // vesta-disable-next-line <ruleName>   (line directly above)
+```
+
+Severities cascade through every level. Options merge — if level 2 sets
+`maxLines: 600` and level 3 sets `maxLines: 800` for a specific path, the
+file-specific 800 wins for matching files.
+
 ## When a rule is wrong
 
 The linter is not always right. If a rule rejects a change you're confident

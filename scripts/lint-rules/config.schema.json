@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Vesta lint-rules config",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "rules": {
+      "type": "object",
+      "description": "Per-rule severity and options.",
+      "additionalProperties": { "$ref": "#/definitions/RuleConfigEntry" }
+    },
+    "overrides": {
+      "type": "array",
+      "description": "File-pattern overrides applied after the global rules block.",
+      "items": { "$ref": "#/definitions/Override" }
+    }
+  },
+  "definitions": {
+    "Severity": {
+      "type": "string",
+      "enum": ["off", "warn", "error"]
+    },
+    "RuleConfigEntry": {
+      "oneOf": [
+        { "$ref": "#/definitions/Severity" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "severity": { "$ref": "#/definitions/Severity" },
+            "options": {
+              "type": "object",
+              "description": "Rule-specific options. See docs/RULES.md for the list.",
+              "additionalProperties": true
+            }
+          }
+        }
+      ]
+    },
+    "Override": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["includes", "rules"],
+      "properties": {
+        "includes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "description": "Glob relative to repo root. ** matches any depth, * matches one segment."
+          }
+        },
+        "rules": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/RuleConfigEntry" }
+        }
+      }
+    }
+  }
+}
