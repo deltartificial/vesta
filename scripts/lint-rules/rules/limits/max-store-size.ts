@@ -1,18 +1,15 @@
 import { isStoreFile } from "../../helpers";
-import type { Rule } from "../../types";
-
-const MAX_STORE_LINES = 250;
+import { numOption, type Rule } from "../../types";
 
 export const maxStoreSize: Rule = {
   name: "max-store-size",
-  message: `Store exceeds ${MAX_STORE_LINES} lines. Split into smaller stores.`,
+  message: "Store file is too large. Split into smaller stores.",
+  defaultOptions: { maxLines: 250 },
   match: isStoreFile,
-  check({ lines, addError }) {
-    if (lines.length > MAX_STORE_LINES) {
-      addError(
-        1,
-        `Store has ${lines.length} lines, exceeds ${MAX_STORE_LINES}. Split into smaller stores.`,
-      );
+  check({ lines, addError, options }) {
+    const max = numOption(options, "maxLines", 250);
+    if (lines.length > max) {
+      addError(1, `Store has ${lines.length} lines, exceeds ${max}. Split into smaller stores.`);
     }
   },
 };

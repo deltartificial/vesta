@@ -1,6 +1,4 @@
-import type { Rule } from "../../types";
-
-const MAX_IMPORTS = 25;
+import { numOption, type Rule } from "../../types";
 
 function isImportLine(trimmed: string): boolean {
   return (
@@ -10,8 +8,10 @@ function isImportLine(trimmed: string): boolean {
 
 export const maxImports: Rule = {
   name: "max-imports",
-  message: `Imports exceed ${MAX_IMPORTS}. Extract sub-modules or split this file.`,
-  check({ lines, addError }) {
+  message: "Too many imports. Extract sub-modules or split this file.",
+  defaultOptions: { max: 25 },
+  check({ lines, addError, options }) {
+    const max = numOption(options, "max", 25);
     let count = 0;
     let lastImportLine = 0;
     for (let i = 0; i < lines.length; i++) {
@@ -21,10 +21,10 @@ export const maxImports: Rule = {
         lastImportLine = i + 1;
       }
     }
-    if (count > MAX_IMPORTS) {
+    if (count > max) {
       addError(
         lastImportLine,
-        `${count} imports exceed the limit of ${MAX_IMPORTS}. Extract sub-modules or split this file.`,
+        `${count} imports exceed the limit of ${max}. Extract sub-modules or split this file.`,
       );
     }
   },

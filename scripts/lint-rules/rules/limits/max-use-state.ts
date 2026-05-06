@@ -1,14 +1,15 @@
 import { isComponentFile } from "../../helpers";
-import type { Rule } from "../../types";
+import { numOption, type Rule } from "../../types";
 
-const MAX_USE_STATE = 3;
 const useStateCall = /\buseState\s*[<(]/;
 
 export const maxUseState: Rule = {
   name: "max-useState",
-  message: `useState calls exceed ${MAX_USE_STATE}. Move state into a Zustand store or a reducer.`,
+  message: "Too many useState calls. Move state into a Zustand store or a reducer.",
+  defaultOptions: { max: 3 },
   match: isComponentFile,
-  check({ lines, addError }) {
+  check({ lines, addError, options }) {
+    const max = numOption(options, "max", 3);
     let count = 0;
     let firstLine = 0;
     lines.forEach((line, index) => {
@@ -17,10 +18,10 @@ export const maxUseState: Rule = {
         if (firstLine === 0) firstLine = index + 1;
       }
     });
-    if (count > MAX_USE_STATE) {
+    if (count > max) {
       addError(
         firstLine || 1,
-        `${count} useState calls exceed the limit of ${MAX_USE_STATE}. Move state into a Zustand store or a reducer.`,
+        `${count} useState calls exceed the limit of ${max}. Move state into a Zustand store or a reducer.`,
       );
     }
   },
