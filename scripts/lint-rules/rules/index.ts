@@ -20,6 +20,27 @@ import { maxComponentSize } from "./limits/max-component-size";
 import { maxImports } from "./limits/max-imports";
 import { maxStoreSize } from "./limits/max-store-size";
 import { maxUseState } from "./limits/max-use-state";
+import { bundleAnalyzablePaths } from "./perf/bundle/analyzable-paths";
+import { bundleBarrelImports } from "./perf/bundle/barrel-imports";
+import { bundleDeferThirdParty } from "./perf/bundle/defer-third-party";
+import { bundleDynamicImports } from "./perf/bundle/dynamic-imports";
+import { passiveEventListeners } from "./perf/client/passive-event-listeners";
+import { combineIterations } from "./perf/js/combine-iterations";
+import { flatmapFilter } from "./perf/js/flatmap-filter";
+import { hoistRegexp } from "./perf/js/hoist-regexp";
+import { minMaxLoop } from "./perf/js/min-max-loop";
+import { toSortedImmutable } from "./perf/js/tosorted-immutable";
+import { animateSvgWrapper } from "./perf/rendering/animate-svg-wrapper";
+import { hydrationSuppressWarning } from "./perf/rendering/hydration-suppress-warning";
+import { scriptDeferAsync } from "./perf/rendering/script-defer-async";
+import { svgPrecision } from "./perf/rendering/svg-precision";
+import { useTransitionLoading } from "./perf/rendering/usetransition-loading";
+import { lazyStateInit } from "./perf/rerender/lazy-state-init";
+import { memoDefaultValue } from "./perf/rerender/memo-default-value";
+import { noInlineComponents } from "./perf/rerender/no-inline-components";
+import { simpleExpressionInMemo } from "./perf/rerender/simple-expression-in-memo";
+import { rerenderTransitions } from "./perf/rerender/transitions";
+import { useRefTransient } from "./perf/rerender/use-ref-transient";
 import { enforceHookLocation } from "./requires/enforce-hook-location";
 import { enforceStoreSuffix } from "./requires/enforce-store-suffix";
 import { noUnmemoizedComponents } from "./requires/no-unmemoized-components";
@@ -53,4 +74,26 @@ export const rules: Rule[] = [
   maxComponentSize,
   maxUseState,
   maxImports,
+
+  bundleBarrelImports,
+  bundleAnalyzablePaths,
+  bundleDeferThirdParty,
+  bundleDynamicImports,
+  passiveEventListeners,
+  combineIterations,
+  flatmapFilter,
+  hoistRegexp,
+  minMaxLoop,
+  toSortedImmutable,
+  animateSvgWrapper,
+  hydrationSuppressWarning,
+  scriptDeferAsync,
+  svgPrecision,
+  useTransitionLoading,
+  lazyStateInit,
+  memoDefaultValue,
+  noInlineComponents,
+  simpleExpressionInMemo,
+  rerenderTransitions,
+  useRefTransient,
 ];

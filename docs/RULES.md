@@ -124,6 +124,59 @@ into a Zustand store or a `useReducer`.
 More than **25** import statements in one file fails. The file is doing too
 much; extract a sub-module.
 
+## Performance rules
+
+These live under `scripts/lint-rules/rules/perf/` and target React/web-perf
+anti-patterns rather than architectural shape. All are regex-based, so they
+favor false negatives over false positives — the goal is to catch the
+obvious cases without blocking edge cases.
+
+### Bundle (`perf/bundle/*`)
+
+| Rule | What |
+|------|------|
+| `perf/bundle-barrel-imports` | Imports from `lucide-react`, `@mui/material`, `@radix-ui/react-icons`, `@hugeicons/react`, `react-icons`, `@mui/icons-material` without a deep subpath. Barrel modules ship the whole package. |
+| `perf/bundle-analyzable-paths` | `import('./x' + name)` and `` import(`./x${name}`) `` defeat static analysis. Use a literal or a `switch` of literal imports. |
+| `perf/bundle-defer-third-party` | Static imports of analytics/observability libs (`@sentry/*`, `@datadog/*`, `posthog-js`, `mixpanel-browser`, `@hotjar/*`, `amplitude-js`). Lazy-load them after hydration. |
+| `perf/bundle-dynamic-imports` | Static imports of known-heavy libs (`monaco-editor`, `recharts`, `react-syntax-highlighter`, `prismjs`, `mermaid`, `react-pdf`, `jspdf`, `html2canvas`, `@tiptap/*`). Wrap in `lazy(() => import(...))`. |
+
+### Client (`perf/client/*`)
+
+| Rule | What |
+|------|------|
+| `perf/passive-event-listeners` | `addEventListener('touchstart' \| 'touchmove' \| 'touchend' \| 'wheel' \| 'mousewheel', ...)` without `{ passive: true }`. Blocks scrolling on mobile. |
+
+### JavaScript (`perf/js/*`)
+
+| Rule | What |
+|------|------|
+| `perf/combine-iterations` | `.filter(...).filter(...)` or similar chains that walk the array twice. |
+| `perf/flatmap-filter` | `.map(...).filter(Boolean)`. Use `.flatMap` returning `[]` or `[value]`. |
+| `perf/hoist-regexp` | `new RegExp(...)` inside a function body. Hoist to module scope or wrap in `useMemo` for dynamic patterns. |
+| `perf/min-max-loop` | `.sort(...)[0]` or `.sort(...).at(...)` — sorting to read one element is `O(n log n)`. |
+| `perf/tosorted-immutable` | `.sort(...)` mutates in place. Use `.toSorted()` or sort a spread copy. |
+
+### Rendering (`perf/rendering/*`)
+
+| Rule | What |
+|------|------|
+| `perf/animate-svg-wrapper` | `<svg className="animate-...">`. Wrap in a `<div>` and animate the wrapper for hardware acceleration. |
+| `perf/hydration-suppress-warning` | `Math.random()` / `crypto.getRandomValues()` directly in JSX without `suppressHydrationWarning`. |
+| `perf/script-defer-async` | `<script src="...">` without `defer`, `async`, or `type="module"`. Blocks HTML parsing. |
+| `perf/svg-precision` | SVG `path` coordinates with 3+ decimal places. Round to one decimal. |
+| `perf/usetransition-loading` | `useState(false)` + `setIsLoading(true)` around an `await`. Use `useTransition` so the previous UI stays interactive. |
+
+### Re-render (`perf/rerender/*`)
+
+| Rule | What |
+|------|------|
+| `perf/lazy-state-init` | `useState(buildIndex(items))` runs the call every render. Pass an arrow: `useState(() => buildIndex(items))`. |
+| `perf/memo-default-value` | Default parameter `= () => {}`, `= []`, `= {}` inside `memo()`. New reference every render — defeats memoization. Hoist the default. |
+| `perf/no-inline-components` | Component-shaped declaration (`const Foo = () => <...>` or `function Foo() { ... }`) inside another function. Recreated every render. Move to module scope. |
+| `perf/simple-expression-in-memo` | `useMemo(() => a \|\| b, [a, b])` and similar trivial expressions. The memo overhead is more than recomputation. |
+| `perf/rerender-transitions` | High-frequency listeners (scroll, resize, input, mousemove) that call `setState`. Wrap in `startTransition` or `useTransition`. |
+| `perf/use-ref-transient` | `setX(e.clientX)` and similar pointer/scroll/touch values stored in `useState`. Use `useRef` and write to a DOM node directly. |
+
 ## Biome-enforced rules
 
 These run via `bun run check:ci`, not the custom linter:
