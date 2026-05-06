@@ -1,0 +1,12 @@
+* text=auto eol=lf
+
+*.{ts,tsx,js,jsx,mjs,cjs} text eol=lf
+*.{json,jsonc,toml,yml,yaml} text eol=lf
+*.{md,mdx,html,css,scss} text eol=lf
+
+*.{png,jpg,jpeg,gif,ico,webp,avif,wasm,woff,woff2,ttf,otf,eot} binary
+
+bun.lockb binary linguist-generated
+package-lock.json linguist-generated
+yarn.lock linguist-generated
+pnpm-lock.yaml linguist-generated
