@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/deltartificial/vesta/compare/v1.1.0...v1.2.0) (2026-05-06)
+
+
+### Features
+
+* **lint:** add config file, severity levels, and inline disable directives ([#15](https://github.com/deltartificial/vesta/issues/15)) ([cc363fa](https://github.com/deltartificial/vesta/commit/cc363fa285b09d313a7321425a919f88d868d524))
+
 ## [1.1.0](https://github.com/deltartificial/vesta/compare/v1.0.0...v1.1.0) (2026-05-06)
 
 
