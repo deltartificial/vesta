@@ -46,6 +46,20 @@ defers — the changelog still records every entry.
 Hidden types still bump version when applicable; they just don't appear in the
 user-facing changelog.
 
+## Repository prerequisite
+
+`release.yml` opens a pull request from a GitHub Actions run. New repositories
+disable this by default and the workflow fails with
+`GitHub Actions is not permitted to create or approve pull requests`.
+
+Enable it once, manually:
+
+> **Settings → Actions → General → Workflow permissions**
+> ✔ Allow GitHub Actions to create and approve pull requests
+
+After flipping the toggle, push a fresh commit to `main` (or re-run the latest
+`release` workflow) to trigger release-please.
+
 ## Workflow permissions
 
 The default `${{ secrets.GITHUB_TOKEN }}` is sufficient to open and merge the
