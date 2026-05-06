@@ -25,7 +25,10 @@
     "format": "biome format --write .",
     "check": "biome check --write .",
     "check:ci": "biome check .",
-    "pr": "bun run lint:all && bun run typecheck && bun run test:run && bun run build",
+    "knip": "knip",
+    "size": "size-limit",
+    "licenses": "license-checker-rseidelsohn --production --excludePrivatePackages --onlyAllow 'MIT;MIT*;ISC;Apache-2.0;Apache 2.0;BSD-2-Clause;BSD-3-Clause;BSD;0BSD;CC0-1.0;CC-BY-4.0;Unlicense;Python-2.0;BlueOak-1.0.0'",
+    "pr": "bun run lint:all && bun run typecheck && bun run knip && bun run licenses && bun run test:run && bun run build && bun run size",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -49,6 +52,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.8",
+    "@size-limit/file": "^11.1.6",
+    "@size-limit/preset-app": "^11.1.6",
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
     "@commitlint/types": "^19.5.0",
@@ -64,6 +69,9 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
     "jsdom": "^27.0.0",
+    "knip": "^5.39.0",
+    "license-checker-rseidelsohn": "^4.4.2",
+    "size-limit": "^11.1.6",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.9.0",

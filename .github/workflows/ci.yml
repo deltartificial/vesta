@@ -127,12 +127,80 @@ jobs:
           path: dist/
           retention-days: 7
 
+  knip:
+    name: knip
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - name: install
+        run: bun install --frozen-lockfile
+      - name: knip
+        run: bun run knip
+
+  licenses:
+    name: licenses
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - name: install
+        run: bun install --frozen-lockfile
+      - name: licenses
+        run: bun run licenses
+
+  typos:
+    name: typos
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: crate-ci/typos@v1
+
+  size-limit:
+    name: size-limit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - name: install
+        run: bun install --frozen-lockfile
+      - name: download dist
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: size
+        run: bun run size
+
   all-green:
     name: all-green
     runs-on: ubuntu-latest
     timeout-minutes: 1
     if: always()
-    needs: [biome, architecture-rules, typecheck, test, coverage, build]
+    needs:
+      [
+        biome,
+        architecture-rules,
+        typecheck,
+        test,
+        coverage,
+        build,
+        knip,
+        licenses,
+        typos,
+        size-limit,
+      ]
     steps:
       - name: gate
         uses: re-actors/alls-green@release/v1

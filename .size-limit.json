@@ -1,0 +1,32 @@
+[
+  {
+    "name": "vendor (react)",
+    "path": "dist/assets/vendor-*.js",
+    "limit": "65 kB",
+    "gzip": true
+  },
+  {
+    "name": "router",
+    "path": "dist/assets/router-*.js",
+    "limit": "15 kB",
+    "gzip": true
+  },
+  {
+    "name": "query",
+    "path": "dist/assets/query-*.js",
+    "limit": "10 kB",
+    "gzip": true
+  },
+  {
+    "name": "app entry",
+    "path": "dist/assets/index-*.js",
+    "limit": "5 kB",
+    "gzip": true
+  },
+  {
+    "name": "css",
+    "path": "dist/assets/index-*.css",
+    "limit": "5 kB",
+    "gzip": true
+  }
+]

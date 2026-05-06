@@ -1,0 +1,23 @@
+[default]
+extend-ignore-identifiers-re = []
+
+[default.extend-words]
+
+[files]
+extend-exclude = [
+  "bun.lockb",
+  "package-lock.json",
+  "yarn.lock",
+  "pnpm-lock.yaml",
+  "dist",
+  "coverage",
+  "node_modules",
+  "*.svg",
+  "*.png",
+  "*.jpg",
+  "*.gif",
+  "*.ico",
+  "*.woff*",
+  "*.ttf",
+  "*.otf",
+]
