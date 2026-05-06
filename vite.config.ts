@@ -19,8 +19,27 @@ export default defineConfig({
     minify: "esbuild",
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ["react", "react-dom"],
+        manualChunks: (id) => {
+          if (!id.includes("node_modules")) {
+            return undefined;
+          }
+          if (id.includes("react-router")) return "router";
+          if (id.includes("@tanstack")) return "query";
+          if (id.includes("zustand")) return "state";
+          if (id.includes("react-hook-form") || id.includes("@hookform") || id.includes("/zod/")) {
+            return "forms";
+          }
+          if (id.includes("framer-motion") || id.includes("motion-")) return "animation";
+          if (id.includes("@base-ui-components")) return "ui";
+          if (
+            id.includes("/react/") ||
+            id.includes("/react-dom/") ||
+            id.includes("scheduler") ||
+            id.includes("/react-is/")
+          ) {
+            return "vendor";
+          }
+          return undefined;
         },
       },
     },
@@ -31,6 +50,6 @@ export default defineConfig({
     modulePreload: { polyfill: true },
   },
   optimizeDeps: {
-    include: ["react", "react-dom"],
+    include: ["react", "react-dom", "zustand", "@tanstack/react-query"],
   },
 });

@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 import App from "@/app";
 
 describe("App", () => {
-  it("renders the title", () => {
+  it("lazy-loads the home route and renders the title", async () => {
     render(<App />);
-    expect(screen.getByRole("heading", { name: "Vesta" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Vesta" })).toBeInTheDocument();
   });
 });
