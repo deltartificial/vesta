@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/deltartificial/vesta/compare/v1.0.0...v1.1.0) (2026-05-06)
+
+
+### Features
+
+* **lint:** add 21 performance rules under perf/ ([#14](https://github.com/deltartificial/vesta/issues/14)) ([7c238d0](https://github.com/deltartificial/vesta/commit/7c238d0c9926945a0332d448700b988c52cb541d))
+
+
+### Refactor
+
+* split lint-rules into per-rule modules ([#12](https://github.com/deltartificial/vesta/issues/12)) ([6615d9e](https://github.com/deltartificial/vesta/commit/6615d9ec083bf0a3a0e5fcc41177795c9b45234e))
+
 ## 1.0.0 (2026-05-06)
 
 
