@@ -11,7 +11,7 @@ export class HttpError extends Error {
   }
 }
 
-export interface HttpRequest extends RequestInit {
+interface HttpRequest extends RequestInit {
   url: string;
 }
 

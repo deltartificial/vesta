@@ -1,0 +1,12 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["src/schemas/health.ts", "src/store/ui/hover-store.ts"],
+  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.ts"],
+  "ignoreDependencies": [
+    "@base-ui-components/react",
+    "@hookform/resolvers",
+    "framer-motion",
+    "react-hook-form",
+    "@testing-library/user-event"
+  ]
+}
