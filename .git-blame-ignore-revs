@@ -1,0 +1,5 @@
+# Revisions listed here are ignored by `git blame` when the repo is configured
+# with `git config blame.ignoreRevsFile .git-blame-ignore-revs`.
+#
+# Add the full SHA of mass-reformat or rename-only commits here so they don't
+# pollute blame output. One SHA per line, optional trailing comment.
