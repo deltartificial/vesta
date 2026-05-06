@@ -1,0 +1,38 @@
+name: pr-title
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  pull-requests: read
+
+jobs:
+  validate:
+    name: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            chore
+            test
+            bench
+            perf
+            refactor
+            docs
+            ci
+            revert
+            deps
+            build
+            style
+          requireScope: false
+          subjectPattern: ^[a-z].+$
+          subjectPatternError: |
+            The subject of the PR title must start with a lowercase letter.
+            Format: `type(scope): description`. Example: `feat(forms): add zod-backed form context`.
