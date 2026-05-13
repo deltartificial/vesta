@@ -68,7 +68,7 @@
     "autoprefixer": "^10.4.22",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.2",
-    "jsdom": "^27.0.0",
+    "jsdom": "^29.1.1",
     "knip": "^5.39.0",
     "license-checker-rseidelsohn": "^4.4.2",
     "size-limit": "^11.1.6",
