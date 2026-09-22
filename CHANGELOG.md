@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.0](https://github.com/deltartificial/vesta/compare/v1.3.0...v1.4.0) (2026-09-22)
+
+
+### Features
+
+* **architecture:** split code by feature and switch to file-based routing ([b5bd928](https://github.com/deltartificial/vesta/commit/b5bd92803ee8a7ce59394d5cd4c4fa02091623a6))
+
+
+### Build
+
+* **deps:** update all dependencies to latest ([1682af7](https://github.com/deltartificial/vesta/commit/1682af749f153293084e1c3be8d1198fa8a1fb1a))
+
 ## [1.3.0](https://github.com/deltartificial/vesta/compare/v1.2.0...v1.3.0) (2026-05-06)
 
 
