@@ -1,18 +1,18 @@
 import { memo } from "react";
-import { useStatus } from "@/hooks/status/use-status";
-import type { StatusRow } from "@/types/status";
+import { useStatus } from "@/features/status/hooks/use-status";
+import type { StatusCardProps, StatusRow } from "@/features/status/types/status";
 import { formatVersion } from "@/utils/format/format-version";
 
-export const StatusCard = memo(function StatusCard() {
+export const StatusCard = memo(function StatusCard({ fields }: StatusCardProps) {
   const { data, isLoading, isError } = useStatus();
 
   const rows: StatusRow[] =
     data == null
       ? []
-      : [
-          { label: "status", value: data.status },
-          { label: "version", value: formatVersion(data.version) },
-        ];
+      : fields.map((field) => ({
+          label: field,
+          value: field === "version" ? formatVersion(data.version) : data.status,
+        }));
 
   return (
     <div className="w-full max-w-sm rounded-sm border border-neutral-800 bg-neutral-900/40 p-4 font-mono text-sm">

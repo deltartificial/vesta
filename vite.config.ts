@@ -1,11 +1,15 @@
 import path from "node:path";
 import tailwindcss from "@tailwindcss/vite";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import compression from "vite-plugin-compression";
 
+const ROUTER_PACKAGES = /@tanstack\/(react-router|router-core|history|react-store|store)\//;
+
 export default defineConfig({
   plugins: [
+    tanstackRouter(),
     react(),
     tailwindcss(),
     compression({ algorithm: "gzip", ext: ".gz" }),
@@ -24,7 +28,7 @@ export default defineConfig({
           if (!id.includes("node_modules")) {
             return undefined;
           }
-          if (id.includes("react-router")) return "router";
+          if (ROUTER_PACKAGES.test(id)) return "router";
           if (id.includes("@tanstack")) return "query";
           if (id.includes("zustand")) return "state";
           if (id.includes("react-hook-form") || id.includes("@hookform") || id.includes("/zod/")) {

@@ -1,7 +1,8 @@
 #!/usr/bin/env bun
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import { loadConfig } from "./lint-rules/config";
 import { walk } from "./lint-rules/helpers";
+import { GENERATED_FILES } from "./lint-rules/paths";
 import { rules } from "./lint-rules/rules";
 import { lintFile } from "./lint-rules/runner";
 
@@ -13,6 +14,7 @@ let errorCount = 0;
 let warnCount = 0;
 
 for (const file of walk(SRC)) {
+  if (GENERATED_FILES.has(relative(ROOT, file))) continue;
   for (const e of lintFile(ROOT, file, rules, config)) {
     const tag = e.severity === "error" ? "[error]" : "[warn] ";
     console.error(`${e.rel}:${e.line}  ${tag} [${e.rule}]  ${e.message}`);

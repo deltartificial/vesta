@@ -7,29 +7,80 @@ it from the linter.
 
 ## Layered model
 
+Code is split by **domain first**, then by technical layer inside each domain.
+Global folders only hold code that is generic and shared by several domains.
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  src/pages/              routes (lazy-loaded only)          │
+│  src/routes/             file-based routes (TanStack Router)│
+│                          composes features, validates URL   │
 ├─────────────────────────────────────────────────────────────┤
-│  src/components/         presentation (memoized, < 450 LOC) │
-│    ui/                   primitives (memo optional)         │
+│  src/features/<domain>/  one folder per business domain     │
+│    components/           memoized, < 450 LOC                │
+│    hooks/                useX, composes store + queries     │
+│    store/                zustand stores (< 250 LOC each)    │
+│    services/             data boundary (zod-parsed)         │
+│    schemas/              zod schemas (payloads, URL params) │
+│    types/  constants/  utils/                               │
 ├─────────────────────────────────────────────────────────────┤
-│  src/hooks/              reusable behavior (useX)           │
-├─────────────────────────────────────────────────────────────┤
-│  src/store/              zustand stores (< 250 LOC each)    │
-│  src/services/           data boundary (zod-parsed)         │
-│  src/schemas/            shared zod schemas                 │
-├─────────────────────────────────────────────────────────────┤
+│  shared, domain-agnostic layers                             │
+│  src/components/ui/      primitives (memo optional)         │
+│  src/hooks/              generic hooks                      │
+│  src/services/http.ts    the only place fetch() is called   │
+│  src/schemas/  src/types/  src/constants/                   │
 │  src/utils/              pure helpers, fully tested         │
-│  src/constants/          colors, sizes, hotkeys, animations │
-│  src/types/              shared TypeScript types            │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-Imports flow downward only. A `utils/` file never imports from `components/`,
-a `store/` file never imports from `pages/`, and so on. The architecture
-linter enforces a subset of this directly; the rest is a code-review
-responsibility.
+Imports flow downward only, and the architecture linter enforces it:
+
+- a feature never imports another feature (`enforce-feature-boundaries`);
+  two features meet only in a route;
+- shared layers never import a feature;
+- `src/pages/`, `src/store/` and non-`ui/` folders under `src/components/`
+  are rejected (`enforce-feature-structure`).
+
+When two features need the same thing, move it down into a shared layer
+instead of importing across features.
+
+## Routing
+
+Routes are files under `src/routes/`. The TanStack Router plugin generates
+`src/route-tree.gen.ts` (committed, never edited by hand) and splits every
+route component into its own chunk (`autoCodeSplitting`).
+
+| URL | File |
+|-----|------|
+| `/` | `src/routes/index.tsx` |
+| `/status/$field` | `src/routes/status/$field.tsx` |
+| layout for `/users/*` | `src/routes/users/route.tsx` |
+
+Nested routes use directories, never the dot notation (`status.$field.tsx`),
+which the kebab-case filename rule rejects.
+
+The URL is an external boundary, so every value read from it goes through
+Zod (`require-route-schemas`):
+
+```ts
+export const Route = createFileRoute("/users/$userId")({
+  params: { parse: parseParams(UserParams) },
+  validateSearch: UserSearch,
+  component: UserPage,
+});
+```
+
+- **Path params**: every route whose path contains a `$segment` declares
+  `params: { parse: parseParams(Schema) }`. An invalid param becomes a 404
+  instead of an error screen. Child routes receive params already parsed by
+  their parent, so use `z.coerce` for non-string params.
+- **Search params**: every route that calls `useSearch()` declares
+  `validateSearch: Schema`. Give each key a `.default()` and a `.catch()` so a
+  hand-edited URL falls back instead of crashing.
+- Schemas live in `src/features/<domain>/schemas/`, never inline in the
+  route file.
+
+`Route.useParams()` and `Route.useSearch()` are fully typed from the schema,
+and so are `<Link to params search>` and `useNavigate()`.
 
 ## Data flow
 
@@ -37,16 +88,22 @@ responsibility.
 external API
      │  fetch
      ▼
-src/services/*.ts      ── http(schema, request) ── zod.parse(...)
+src/services/http.ts   ── http(schema, request) ── zod.parse(...)
      │  typed value
+     ▼
+features/<d>/services  ── one function per endpoint
+     │
      ▼
 @tanstack/react-query  ── query key, staleTime, retry
      │  hook output
      ▼
+features/<d>/hooks     ── useX()
+     │
+     ▼
 component              ── memoized, useShallow on store
      │  user action
      ▼
-src/store/*-store.ts   ── action method
+features/<d>/store/*-store.ts  ── action method
 ```
 
 There is no `useEffect` anywhere in this picture. Side effects belong to
@@ -56,15 +113,17 @@ TanStack Query or to event handlers; runtime state belongs to Zustand.
 
 | Concern | Folder | Notes |
 |---------|--------|-------|
-| Network calls | `src/services/` | Every function ends in `schema.parse()` or `safeParse()` |
-| Runtime schemas | `src/schemas/` | `z.object`/`z.union`/etc. Reused by services and tests |
-| Types | `src/types/` | Pure TS shapes. Never declared inside a component file |
-| Cross-cutting state | `src/store/<domain>/<name>-store.ts` | One Zustand factory per file, max 250 LOC |
-| Reusable behavior | `src/hooks/<domain>/use-<name>.ts` | Hooks compose stores and queries; never own state directly |
+| Routes | `src/routes/` | File-based; params and search validated by Zod |
+| Domain components | `src/features/<domain>/components/` | Always wrapped in `memo()`, max 450 LOC, props < 8 |
+| Domain behavior | `src/features/<domain>/hooks/use-<name>.ts` | Hooks compose stores and queries; never own state directly |
+| Domain state | `src/features/<domain>/store/<name>-store.ts` | One Zustand factory per file, max 250 LOC |
+| Network calls | `src/features/<domain>/services/` | Every function ends in `schema.parse()` or goes through `http()` |
+| Runtime schemas | `src/features/<domain>/schemas/` | Payloads, path params, search params |
+| Domain types / constants / helpers | `src/features/<domain>/{types,constants,utils}/` | Same rules as their shared counterparts |
+| HTTP transport | `src/services/http.ts` | The only file allowed to call `fetch()` |
 | UI primitives | `src/components/ui/` | Base UI / Tailwind atoms; `memo()` optional |
-| Domain components | `src/components/<domain>/` | Always wrapped in `memo()`, max 450 LOC, props < 8 |
-| Routes | `src/pages/` | Always loaded via `lazy(() => import('@/pages/x'))` |
-| Constants | `src/constants/<domain>/` | Colors, animations, hotkeys, sizes |
+| Generic hooks | `src/hooks/` | No domain knowledge |
+| Shared schemas / types / constants | `src/schemas/`, `src/types/`, `src/constants/` | Used by several features |
 | Pure helpers | `src/utils/<domain>/` | No React, no DOM, easily unit-tested |
 
 ## Boundary contract
@@ -75,7 +134,8 @@ it touches application code. That means:
 - HTTP responses: `http(schema, request)` returns the parsed value
 - LocalStorage / SessionStorage: read through `src/utils/storage`, which
   passes the raw string through `JSON.parse` plus a Zod schema
-- URL search params: read via `react-router` and validated against a schema
+- URL params and search params: validated by the route (`parseParams`,
+  `validateSearch`), see [Routing](#routing)
 - Environment variables: validated at boot in a single `env` module
 
 `JSON.parse` and raw `fetch` are forbidden in application code (the linter
@@ -90,7 +150,7 @@ husky pre-commit
    ↓
 lint-staged   ── biome check --write on staged files
    ↓
-bun run lint:rules   ── 26 architecture rules (scripts/lint-rules.ts)
+bun run lint:rules   ── 28 architecture rules (scripts/lint-rules.ts)
    ↓
 husky commit-msg
    ↓

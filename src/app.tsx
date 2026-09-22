@@ -1,9 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { lazy, Suspense } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { PageFallback } from "@/components/ui/page-fallback";
-
-const Home = lazy(() => import("@/pages/home"));
+import { RouterProvider } from "@tanstack/react-router";
+import type { AppRouter } from "@/router";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -15,18 +12,10 @@ const queryClient = new QueryClient({
   },
 });
 
-function App() {
+export function App({ router }: { router: AppRouter }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Suspense fallback={<PageFallback />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
+      <RouterProvider router={router} />
     </QueryClientProvider>
   );
 }
-
-export default App;

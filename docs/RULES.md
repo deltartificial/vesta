@@ -1,6 +1,6 @@
 # Architecture rules reference
 
-26 rules enforced by `scripts/lint-rules.ts`, plus the structural rules from
+28 rules enforced by `scripts/lint-rules.ts`, plus the structural rules from
 Biome. Each rule names what it forbids and what to do instead.
 
 ## Banned patterns
@@ -17,8 +17,9 @@ exceptions: `// @ts-...`, `// biome-ignore ...`, `// eslint-...`, JSDoc
 (`/** ... */`).
 
 ### `no-inline-types`
-`interface` or `type` declared inside `src/components/**`. **Use** a file
-under `src/types/<domain>/` and import the type.
+`interface` or `type` declared inside a component file (`src/components/**`
+or `src/features/<domain>/components/**`). **Use** a file under
+`src/features/<domain>/types/` (or `src/types/` when shared) and import it.
 
 ### `no-magic-colors`
 Tailwind hex shortcuts (`text-[#fff]`), inline `style={{ color: "#..." }}`,
@@ -29,8 +30,8 @@ or `rgb()/rgba()` in JSX. **Use** `src/constants/ui/colors.ts`.
 `on*` form (`onClick`), or call store actions directly without a wrapper.
 
 ### `no-default-export`
-`export default` outside `src/app.tsx` and `src/pages/**`. **Use** named
-exports so renames are mechanical and tooling can find every reference.
+`export default` anywhere in `src/`. **Use** named exports so renames are
+mechanical and tooling can find every reference. Route files export `Route`.
 
 ### `no-as-casts`
 `as Foo`, `as string`, `as unknown as Foo`. **Use** `satisfies`, a type
@@ -46,25 +47,28 @@ serializer.
 utility, which makes the timezone and source-of-time explicit.
 
 ### `no-banned-libs`
-Imports from `lodash`, `moment`, `dayjs`, `axios`, `underscore`, `request`.
-**Use** the standard alternatives: native arrays/objects, `date-fns`, native
-`fetch` via `services/http`.
+Imports from `lodash`, `moment`, `dayjs`, `axios`, `underscore`, `request`,
+`react-router`, `react-router-dom`. **Use** the standard alternatives: native
+arrays/objects, `date-fns`, native `fetch` via `services/http`,
+`@tanstack/react-router`.
 
 ### `no-window-navigation`
 `window.location.href = ...`, `window.location.assign(...)`,
-`window.location.replace(...)`. **Use** `useNavigate()` from React Router.
+`window.location.replace(...)`. **Use** `useNavigate()` or `<Link>` from
+TanStack Router.
 
 ### `no-untyped-fetch`
-`fetch(...)` outside `src/services/**`. **Use** `http(schema, request)` so
-every payload is validated before it enters the app.
+`fetch(...)` outside `src/services/` (the shared transport). **Use**
+`http(schema, request)` from a feature service so every payload is validated
+before it enters the app.
 
 ### `no-json-parse`
 `JSON.parse(...)`. **Use** a Zod schema's `.parse()` or `.safeParse()`.
 
 ### `no-setTimeout-in-component`
-`setTimeout` / `setInterval` inside `src/components/**` without a paired
-clear function. **Use** a hook under `src/hooks/` that tracks the timer ID
-and clears it on unmount.
+`setTimeout` / `setInterval` inside a component file without a paired clear
+function. **Use** a hook under `src/features/<domain>/hooks/` (or
+`src/hooks/` when generic) that tracks the timer ID and clears it on unmount.
 
 ### `no-multiple-conditionals`
 Three or more `{variable === "x" && <Foo />}` blocks on the same variable in
@@ -74,8 +78,8 @@ then `const Component = components[variable]`.
 ## Required patterns
 
 ### `no-unmemoized-components`
-Every component file under `src/components/` (except `src/components/ui/`)
-must be wrapped with `memo()`. Primitives in `ui/` are exempt because the
+Every component file under `src/features/<domain>/components/` must be
+wrapped with `memo()`. `src/components/ui/` primitives are exempt. Primitives in `ui/` are exempt because the
 indirection cost outweighs the benefit.
 
 ### `no-inline-handlers`
@@ -90,16 +94,32 @@ Destructuring two or more properties from a Zustand store without
 single property at a time.
 
 ### `enforce-store-suffix`
-Files under `src/store/` end with `-store.ts`, or are exactly `index.ts`.
+Files under `src/features/<domain>/store/` end with `-store.ts`, or are
+exactly `index.ts`.
 
 ### `enforce-hook-location`
-A `useX` declaration must live in `src/hooks/`, `src/store/`, or inside a
-component file. Hooks defined elsewhere fail the linter.
+A `useX` declaration must live in `src/features/<domain>/hooks/`,
+`src/features/<domain>/store/`, `src/hooks/` (generic hooks only), or inside
+a component file. Hooks defined elsewhere fail the linter.
 
-### `no-eager-page-import`
-`src/app.tsx` is the only file allowed to import pages, and it must do so
-via `lazy(() => import('@/pages/x'))`. Direct `import X from '@/pages/x'`
-is forbidden so chunks split by route automatically.
+### `enforce-feature-structure`
+Domain code lives in `src/features/<domain>/<layer>/`, where `<layer>` is one
+of `components`, `hooks`, `store`, `services`, `schemas`, `types`,
+`constants`, `utils`. Files at the root of a feature, in an unknown layer,
+under `src/pages/` or `src/store/`, or under `src/components/` outside `ui/`
+fail the linter.
+
+### `enforce-feature-boundaries`
+A feature never imports another feature, and shared layers never import a
+feature (both `@/features/...` and relative paths are checked). Only
+`src/routes/` composes features. **Use** a route to put two features on the
+same screen, or move the shared piece into a shared layer.
+
+### `require-route-schemas`
+The URL is an external boundary. A route file whose path contains a
+`$segment` must declare `params: { parse: parseParams(Schema) }`; a route
+file that calls `useSearch()` must declare `validateSearch: Schema`.
+`parseParams` (in `src/utils/router/`) turns an invalid param into a 404.
 
 ### `require-zod-at-boundary`
 Every non-test, non-`index.ts` file under `src/services/` must invoke
@@ -110,7 +130,8 @@ is leaking unvalidated data into the app.
 
 ### `max-store-size`
 A `-store.ts` file over **250 lines** fails. Split by sub-domain or extract
-helpers to `src/utils/store/`.
+helpers to `src/features/<domain>/utils/` (or `src/utils/store/` when
+generic).
 
 ### `max-component-size`
 A component file over **450 lines** fails. Extract sub-components into the
@@ -183,7 +204,7 @@ These run via `bun run check:ci`, not the custom linter:
 
 | Rule | Setting |
 |------|---------|
-| `useFilenamingConvention` | `kebab-case` |
+| `useFilenamingConvention` | `kebab-case` (route files: `index.tsx`, `route.tsx`, `$param.tsx`, `__root.tsx`) |
 | `noNonNullAssertion` | error — banned |
 | `noExplicitAny` | error — banned |
 | `noConsole` | error — banned outside `scripts/**` and tests |
@@ -218,7 +239,7 @@ order — the last one wins:
       "rules": { "no-as-casts": "off" }
     },
     {
-      "includes": ["src/components/big-page/**"],
+      "includes": ["src/features/billing/components/**"],
       "rules": { "max-component-size": "off" }
     }
   ]

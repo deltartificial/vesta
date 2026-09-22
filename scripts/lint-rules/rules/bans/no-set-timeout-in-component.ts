@@ -7,7 +7,7 @@ const cleanupHints = /\b(useEffect|useLayoutEffect|cleanup|clearTimeout|clearInt
 export const noSetTimeoutInComponent: Rule = {
   name: "no-setTimeout-in-component",
   message:
-    "Timers in components require a paired clear in cleanup. Move to a hook under src/hooks/.",
+    "Timers in components require a paired clear in cleanup. Move to a hook under src/hooks/ or src/features/<domain>/hooks/.",
   match: isComponentFile,
   check({ content, lines, addError }) {
     if (cleanupHints.test(content)) return;

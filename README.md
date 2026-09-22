@@ -11,7 +11,10 @@ rails and human reviewers spend their time on logic, not consistency.
 
 - **Build**: Vite 8 with Rolldown, gzip + brotli compression, deterministic
   manualChunks (vendor / router / query / state / forms / animation / ui)
-- **Framework**: React 19 with `react-router-dom` v7 (lazy routes only)
+- **Framework**: React 19 with TanStack Router (file-based routes, automatic
+  code splitting, params and search params validated by Zod)
+- **Structure**: one folder per domain in `src/features/<domain>/`, shared
+  layers only for generic code
 - **State**: Zustand factories with `useShallow`
 - **Data**: TanStack Query (the only side-effect anchor) + Zod schemas at
   every external boundary
@@ -21,7 +24,7 @@ rails and human reviewers spend their time on logic, not consistency.
 - **Tests**: Vitest + Testing Library + jsdom + v8 coverage
 - **Lint / format**: Biome 2 with kebab-case filenames, no `any`, no
   `console`, no `!`, cognitive complexity capped at 15
-- **Architecture rules**: 26 custom rules in `scripts/lint-rules.ts` running
+- **Architecture rules**: 28 custom rules in `scripts/lint-rules.ts` running
   on every commit (no `useEffect`, no `as` casts, memo enforcement, store
   size limits, boundary parsing, banned libs, …)
 - **Quality gates**: knip (unused), size-limit (gzip budgets per chunk),

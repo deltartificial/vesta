@@ -14,7 +14,8 @@
       "!node_modules",
       "!dist",
       "!coverage",
-      "!**/*.d.ts"
+      "!**/*.d.ts",
+      "!src/route-tree.gen.ts"
     ]
   },
   "overrides": [

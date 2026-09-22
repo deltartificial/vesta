@@ -1,4 +1,4 @@
-import { Health } from "@/schemas/health";
+import { Health } from "@/features/status/schemas/health";
 
 const MOCK_DELAY_MS = 250;
 

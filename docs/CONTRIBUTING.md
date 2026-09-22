@@ -17,7 +17,7 @@ so any dependency change must come with a regenerated lockfile.
 |---------|--------------|
 | `bun run dev` | Vite dev server on `http://localhost:5173` |
 | `bun run check` | Format and lint with Biome (writes fixes) |
-| `bun run lint:rules` | Run the 26 architecture rules |
+| `bun run lint:rules` | Run the 28 architecture rules |
 | `bun run lint:all` | Biome + architecture rules (no writes) |
 | `bun run typecheck` | `tsc --noEmit` |
 | `bun run test` | Vitest in watch mode |

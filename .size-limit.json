@@ -8,7 +8,7 @@
   {
     "name": "router",
     "path": "dist/assets/router-*.js",
-    "limit": "15 kB",
+    "limit": "28 kB",
     "gzip": true
   },
   {

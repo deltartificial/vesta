@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "@/app";
+import { App } from "@/app";
+import { createAppRouter } from "@/router";
 import "@/styles/globals.css";
 
 const rootElement = document.getElementById("root");
@@ -10,6 +11,6 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <App />
+    <App router={createAppRouter()} />
   </StrictMode>,
 );

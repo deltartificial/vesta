@@ -14,14 +14,18 @@ layers. For now, what matters:
 2. **No code comments** except `@ts-`, `biome-ignore`, and JSDoc for public
    APIs. If a comment seems necessary, the code is unclear — fix the code.
 3. **No magic values.** Colors, dimensions, timings, and string identifiers
-   live in `src/constants/`.
+   live in `src/constants/` or `src/features/<domain>/constants/`.
 4. **No `as` casts** outside `as const`. Use `satisfies` or runtime validation.
 5. **Files are kebab-case.** Components, hooks, stores, types — everything.
-6. **Components in `src/components/` are wrapped in `memo()`** unless they live
-   in `src/components/ui/` (primitives).
-7. **Stores end with `-store.ts`** and stay under 250 lines. Components stay
+6. **Domain code lives in `src/features/<domain>/<layer>/`.** Features never
+   import each other; routes in `src/routes/` compose them. `src/components/`
+   only holds `ui/` primitives. Feature components are wrapped in `memo()`.
+7. **Routes are files under `src/routes/`** (TanStack Router). Path params use
+   `params: { parse: parseParams(Schema) }`, search params use
+   `validateSearch: Schema`. Never edit `src/route-tree.gen.ts`.
+8. **Stores end with `-store.ts`** and stay under 250 lines. Components stay
    under 450 lines. If a file outgrows the budget, split it.
-8. **Conventional commits.** Format: `type(scope): description`. The PR title
+9. **Conventional commits.** Format: `type(scope): description`. The PR title
    check in CI rejects anything else.
 
 ## Workflow

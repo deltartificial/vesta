@@ -2,9 +2,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import type { PropsWithChildren } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { StatusCard } from "@/components/status-card";
+import { StatusCard } from "@/features/status/components/status-card";
+import { StatusField } from "@/features/status/schemas/status-field";
 
-vi.mock("@/services/status", () => ({
+vi.mock("@/features/status/services/status", () => ({
   getStatus: vi.fn(() => Promise.reject(new Error("boom"))),
 }));
 
@@ -17,7 +18,7 @@ describe("StatusCard", () => {
   it("shows the loading state on first render", () => {
     render(
       <Wrapper>
-        <StatusCard />
+        <StatusCard fields={StatusField.options} />
       </Wrapper>,
     );
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
@@ -26,7 +27,7 @@ describe("StatusCard", () => {
   it("shows unavailable when the query rejects", async () => {
     render(
       <Wrapper>
-        <StatusCard />
+        <StatusCard fields={StatusField.options} />
       </Wrapper>,
     );
     expect(await screen.findByText("unavailable")).toBeInTheDocument();

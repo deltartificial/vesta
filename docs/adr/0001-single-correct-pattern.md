@@ -23,8 +23,8 @@ For every recurring task, Vesta picks one approach and bans the others:
 |------|----------|---------------------|
 | Side effects | TanStack Query, store actions, event handlers | `useEffect` |
 | Cross-cut state | Zustand factories with `useShallow` | `useState` for shared state, prop drilling, Context for state |
-| Network calls | `services/http` with Zod | raw `fetch`, axios, `JSON.parse` |
-| Routing | `react-router` with `lazy()` | eager page imports |
+| Network calls | feature services over `services/http` with Zod | raw `fetch`, axios, `JSON.parse` |
+| Routing | TanStack Router, file-based, Zod-validated URL ([ADR 0002](0002-feature-folders-and-file-routing.md)) | `react-router`, hand-written route tables |
 | Styling | Tailwind 4 + `cn()` + `constants/ui` | inline hex, magic dimensions |
 | File names | `kebab-case` | PascalCase, snake_case |
 | Components | `memo()` (except primitives) | unmemoized non-primitives |
@@ -35,7 +35,7 @@ Tooling layered:
 
 1. **Biome** — syntax-level strictness (cognitive complexity 15, no `any`,
    no `console`, no `!`, kebab-case files, etc.).
-2. **`scripts/lint-rules.ts`** — 26 architecture rules that Biome cannot
+2. **`scripts/lint-rules.ts`** — 28 architecture rules that Biome cannot
    express (memo enforcement, store size limits, boundary parsing,
    forbidden libs, etc.).
 3. **`bun run pr`** — single command that mirrors CI: lint, typecheck, knip,

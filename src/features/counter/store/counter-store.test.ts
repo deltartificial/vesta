@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { useCounterStore } from "@/store/counter/counter-store";
+import { useCounterStore } from "@/features/counter/store/counter-store";
 
 describe("counterStore", () => {
   beforeEach(() => {
@@ -10,20 +10,18 @@ describe("counterStore", () => {
     expect(useCounterStore.getState().count).toBe(0);
   });
 
-  it("increments and decrements", () => {
+  it("increments and decrements by the given step", () => {
     const { increment, decrement } = useCounterStore.getState();
-    increment();
-    increment();
+    increment(1);
+    increment(3);
+    expect(useCounterStore.getState().count).toBe(4);
+    decrement(2);
     expect(useCounterStore.getState().count).toBe(2);
-    decrement();
-    expect(useCounterStore.getState().count).toBe(1);
   });
 
   it("resets to 0", () => {
     const { increment, reset } = useCounterStore.getState();
-    increment();
-    increment();
-    increment();
+    increment(5);
     reset();
     expect(useCounterStore.getState().count).toBe(0);
   });

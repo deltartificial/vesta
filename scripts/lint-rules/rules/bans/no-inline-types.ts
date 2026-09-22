@@ -3,7 +3,8 @@ import type { Rule } from "../../types";
 
 export const noInlineTypes: Rule = {
   name: "no-inline-types",
-  message: "Types and interfaces must live under src/types/, not in components.",
+  message:
+    "Types and interfaces must live under src/types/ or src/features/<domain>/types/, not in components.",
   match: isComponentFile,
   check({ lines, addError }) {
     lines.forEach((line, index) => {

@@ -4,7 +4,6 @@ import { noBannedLibs } from "./bans/no-banned-libs";
 import { noComments } from "./bans/no-comments";
 import { noDefaultExport } from "./bans/no-default-export";
 import { noDirectStorage } from "./bans/no-direct-storage";
-import { noEagerPageImport } from "./bans/no-eager-page-import";
 import { noHandlePrefix } from "./bans/no-handle-prefix";
 import { noInlineHandlers } from "./bans/no-inline-handlers";
 import { noInlineTypes } from "./bans/no-inline-types";
@@ -41,9 +40,12 @@ import { noInlineComponents } from "./perf/rerender/no-inline-components";
 import { simpleExpressionInMemo } from "./perf/rerender/simple-expression-in-memo";
 import { rerenderTransitions } from "./perf/rerender/transitions";
 import { useRefTransient } from "./perf/rerender/use-ref-transient";
+import { enforceFeatureBoundaries } from "./requires/enforce-feature-boundaries";
+import { enforceFeatureStructure } from "./requires/enforce-feature-structure";
 import { enforceHookLocation } from "./requires/enforce-hook-location";
 import { enforceStoreSuffix } from "./requires/enforce-store-suffix";
 import { noUnmemoizedComponents } from "./requires/no-unmemoized-components";
+import { requireRouteSchemas } from "./requires/require-route-schemas";
 import { requireZodAtBoundary } from "./requires/require-zod-at-boundary";
 import { useShallowRequired } from "./requires/use-shallow-required";
 
@@ -53,7 +55,6 @@ export const rules: Rule[] = [
   noComments,
   noDefaultExport,
   noDirectStorage,
-  noEagerPageImport,
   noHandlePrefix,
   noInlineHandlers,
   noInlineTypes,
@@ -69,7 +70,10 @@ export const rules: Rule[] = [
   useShallowRequired,
   enforceStoreSuffix,
   enforceHookLocation,
+  enforceFeatureStructure,
+  enforceFeatureBoundaries,
   requireZodAtBoundary,
+  requireRouteSchemas,
   maxStoreSize,
   maxComponentSize,
   maxUseState,
