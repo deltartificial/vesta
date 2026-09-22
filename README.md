@@ -9,14 +9,14 @@ rails and human reviewers spend their time on logic, not consistency.
 
 ## Stack
 
-- **Build**: Vite 7 with esbuild, gzip + brotli compression, deterministic
+- **Build**: Vite 8 with Rolldown, gzip + brotli compression, deterministic
   manualChunks (vendor / router / query / state / forms / animation / ui)
 - **Framework**: React 19 with `react-router-dom` v7 (lazy routes only)
 - **State**: Zustand factories with `useShallow`
 - **Data**: TanStack Query (the only side-effect anchor) + Zod schemas at
   every external boundary
 - **Forms**: react-hook-form + `@hookform/resolvers` + Zod
-- **UI primitives**: Base UI (headless) + Tailwind 3
+- **UI primitives**: Base UI (headless) + Tailwind 4
 - **Animation**: Framer Motion
 - **Tests**: Vitest + Testing Library + jsdom + v8 coverage
 - **Lint / format**: Biome 2 with kebab-case filenames, no `any`, no

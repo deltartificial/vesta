@@ -8,7 +8,7 @@ export interface LintError {
   severity: Exclude<Severity, "off">;
 }
 
-export interface RuleContext {
+interface RuleContext {
   rel: string;
   content: string;
   lines: string[];

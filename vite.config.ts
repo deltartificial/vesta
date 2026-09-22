@@ -1,4 +1,5 @@
 import path from "node:path";
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import compression from "vite-plugin-compression";
@@ -6,18 +7,18 @@ import compression from "vite-plugin-compression";
 export default defineConfig({
   plugins: [
     react(),
+    tailwindcss(),
     compression({ algorithm: "gzip", ext: ".gz" }),
     compression({ algorithm: "brotliCompress", ext: ".br" }),
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
   build: {
     target: "esnext",
-    minify: "esbuild",
-    rollupOptions: {
+    rolldownOptions: {
       output: {
         manualChunks: (id) => {
           if (!id.includes("node_modules")) {

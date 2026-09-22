@@ -25,7 +25,7 @@ For every recurring task, Vesta picks one approach and bans the others:
 | Cross-cut state | Zustand factories with `useShallow` | `useState` for shared state, prop drilling, Context for state |
 | Network calls | `services/http` with Zod | raw `fetch`, axios, `JSON.parse` |
 | Routing | `react-router` with `lazy()` | eager page imports |
-| Styling | Tailwind 3 + `cn()` + `constants/ui` | inline hex, magic dimensions |
+| Styling | Tailwind 4 + `cn()` + `constants/ui` | inline hex, magic dimensions |
 | File names | `kebab-case` | PascalCase, snake_case |
 | Components | `memo()` (except primitives) | unmemoized non-primitives |
 | Type imports | `import type { ... }` | mixed default + type imports |

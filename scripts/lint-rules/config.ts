@@ -7,9 +7,9 @@ interface RuleConfigObject {
   options?: Record<string, unknown>;
 }
 
-export type RuleConfigEntry = Severity | RuleConfigObject;
+type RuleConfigEntry = Severity | RuleConfigObject;
 
-export interface OverrideConfig {
+interface OverrideConfig {
   includes: string[];
   rules: Record<string, RuleConfigEntry>;
 }

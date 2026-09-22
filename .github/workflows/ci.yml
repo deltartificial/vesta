@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
-  BUN_VERSION: 1.1.34
+  BUN_VERSION: 1.4.2
 
 jobs:
   biome:

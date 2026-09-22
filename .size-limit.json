@@ -14,7 +14,7 @@
   {
     "name": "query",
     "path": "dist/assets/query-*.js",
-    "limit": "12 kB",
+    "limit": "13 kB",
     "gzip": true
   },
   {

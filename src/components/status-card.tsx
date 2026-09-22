@@ -15,7 +15,7 @@ export const StatusCard = memo(function StatusCard() {
         ];
 
   return (
-    <div className="w-full max-w-sm rounded border border-neutral-800 bg-neutral-900/40 p-4 font-mono text-sm">
+    <div className="w-full max-w-sm rounded-sm border border-neutral-800 bg-neutral-900/40 p-4 font-mono text-sm">
       {isLoading ? <div className="text-neutral-500">loading…</div> : null}
       {isError ? <div className="text-red-400">unavailable</div> : null}
       {!isLoading && !isError ? (

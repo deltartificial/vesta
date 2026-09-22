@@ -14,11 +14,10 @@
     "resolveJsonModule": true,
     "noEmit": true,
 
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vitest/globals", "@testing-library/jest-dom", "node"],
+    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom/vitest", "node"],
 
     "strict": true,
     "skipLibCheck": true,
