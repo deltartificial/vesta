@@ -37,6 +37,7 @@ rails and human reviewers spend their time on logic, not consistency.
 bun install
 bun run dev          # http://localhost:5173
 bun run test:run     # run the test suite once
+bun run build        # typecheck + production build
 bun run pr           # full local CI mirror before pushing
 ```
 
