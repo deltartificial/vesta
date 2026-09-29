@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.4.0](https://github.com/deltartificial/vesta/compare/v1.3.0...v1.4.0) (2026-09-29)
+
+
+### Features
+
+* **architecture:** split code by feature and switch to file-based routing ([b5bd928](https://github.com/deltartificial/vesta/commit/b5bd92803ee8a7ce59394d5cd4c4fa02091623a6))
+
+
+### Documentation
+
+* **readme:** add language to workflow code block ([16eeea2](https://github.com/deltartificial/vesta/commit/16eeea2db1885224ac4ff5d3ac8eadea27e68971))
+* **readme:** document build command in quickstart ([5d9a0aa](https://github.com/deltartificial/vesta/commit/5d9a0aa3c94c9c9cb8e1052da3bafe8d0d78b95e))
+* **readme:** document test command in quickstart ([e3e425e](https://github.com/deltartificial/vesta/commit/e3e425e9d368d3e40d51ac5c7864ac67885420c2))
+
+
+### Build
+
+* **deps:** update all dependencies to latest ([1682af7](https://github.com/deltartificial/vesta/commit/1682af749f153293084e1c3be8d1198fa8a1fb1a))
+
 ## [1.3.0](https://github.com/deltartificial/vesta/compare/v1.2.0...v1.3.0) (2026-05-06)
 
 
