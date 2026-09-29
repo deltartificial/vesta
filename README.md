@@ -53,7 +53,7 @@ bun run pr           # full local CI mirror before pushing
 
 ## Workflow
 
-```
+```text
 git commit
    ↓ husky pre-commit
 lint-staged → biome → architecture linter
