@@ -4,8 +4,8 @@ Vesta is an ultra-strict React/TypeScript template. There is **one correct way**
 to do every common task; anything else fails the linter, the custom rule
 runner, or CI.
 
-This file is the index. Detailed rules will land in `docs/` over the next
-layers. For now, what matters:
+This file is the index. Detailed rules live in `docs/` (`RULES.md`,
+`ARCHITECTURE.md`, `adr/`). What matters most:
 
 ## Non-negotiable principles
 

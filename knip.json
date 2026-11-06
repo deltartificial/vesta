@@ -3,7 +3,7 @@
   "entry": [],
   "project": ["src/**/*.{ts,tsx,css}", "scripts/**/*.ts"],
   "ignoreDependencies": [
-    "@base-ui-components/react",
+    "@base-ui/react",
     "@hookform/resolvers",
     "framer-motion",
     "react-hook-form",

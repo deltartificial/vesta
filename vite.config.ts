@@ -35,7 +35,7 @@ export default defineConfig({
             return "forms";
           }
           if (id.includes("framer-motion") || id.includes("motion-")) return "animation";
-          if (id.includes("@base-ui-components")) return "ui";
+          if (id.includes("@base-ui/")) return "ui";
           if (
             id.includes("/react/") ||
             id.includes("/react-dom/") ||
